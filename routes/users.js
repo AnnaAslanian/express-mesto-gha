@@ -9,8 +9,8 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
-router.post('/', getUserInfo);
 router.get('/', getUsers);
+router.post('/me', getUserInfo);
 
 router.get('/:userId', celebrate({
   params: Joi.object().keys({

@@ -10,9 +10,9 @@ const app = express();
 mongoose.connect('mongodb://localhost:27017/mestodb', { family: 4 });
 
 const { createUser, login } = require('./controllers/users');
+const auth = require('./middlwares/auth');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-const auth = require('./middlwares/auth');
 
 app.use(express.json());
 app.use(helmet());

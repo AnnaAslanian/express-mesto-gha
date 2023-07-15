@@ -116,6 +116,7 @@ const getUser = (req, res, next) => {
 
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
+
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {

@@ -6,14 +6,6 @@ const ForbiddenError = require('../errors/ForbiddenError');
 
 const CREATED = 201;
 
-const getCards = (req, res, next) => {
-  Card.find({})
-    .then((cards) => {
-      res.send(cards);
-    })
-    .catch(next);
-};
-
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
@@ -29,6 +21,14 @@ const createCard = (req, res, next) => {
         next(error);
       }
     });
+};
+
+const getCards = (req, res, next) => {
+  Card.find({})
+    .then((cards) => {
+      res.send(cards);
+    })
+    .catch(next);
 };
 
 const deleteCard = (req, res, next) => {
@@ -93,8 +93,8 @@ const dislikeCard = (req, res, next) => {
 };
 
 module.exports = {
-  getCards,
   createCard,
+  getCards,
   deleteCard,
   likeCard,
   dislikeCard,

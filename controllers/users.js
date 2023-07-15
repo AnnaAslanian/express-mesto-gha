@@ -42,48 +42,6 @@ const createUser = (req, res, next) => {
     });
 };
 
-const getUserInfo = (req, res, next) => {
-  User.findById(req.user._id)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь по указанному _id не найден');
-      }
-      res.send(user);
-    })
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
-      } else {
-        next(error);
-      }
-    });
-};
-
-const getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => {
-      res.send(users);
-    })
-    .catch(next);
-};
-
-const getUser = (req, res, next) => {
-  User.findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь с указанным _id не найден');
-      }
-      res.send(user);
-    })
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        next(new BadRequestError('Пользователь с указанным _id не найден'));
-      } else {
-        next(error);
-      }
-    });
-};
-
 const login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -112,6 +70,48 @@ const login = (req, res, next) => {
         });
     })
     .catch(next);
+};
+
+const getUsers = (req, res, next) => {
+  User.find({})
+    .then((users) => {
+      res.send(users);
+    })
+    .catch(next);
+};
+
+const getUserInfo = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь по указанному _id не найден');
+      }
+      res.send(user);
+    })
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(error);
+      }
+    });
+};
+
+const getUser = (req, res, next) => {
+  User.findById(req.params.userId)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь с указанным _id не найден');
+      }
+      res.send(user);
+    })
+    .catch((error) => {
+      if (error.name === 'CastError') {
+        next(new BadRequestError('Пользователь с указанным _id не найден'));
+      } else {
+        next(error);
+      }
+    });
 };
 
 const updateUser = (req, res, next) => {
@@ -152,10 +152,10 @@ const updateAvatar = (req, res, next) => {
 
 module.exports = {
   createUser,
-  getUserInfo,
   getUsers,
   getUser,
-  login,
+  getUserInfo,
   updateUser,
   updateAvatar,
+  login,
 };

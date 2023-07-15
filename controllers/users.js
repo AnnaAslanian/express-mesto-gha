@@ -11,21 +11,21 @@ const CREATED = 201;
 
 const createUser = (req, res, next) => {
   const {
-    email,
-    password,
     name,
     about,
     avatar,
+    email,
+    password,
   } = req.body;
 
   bcrypt.hash(String(password), 10)
     .then((hashedPassword) => {
       User.create({
-        email,
-        password: hashedPassword,
         name,
         about,
         avatar,
+        email,
+        password: hashedPassword,
       })
         .then((user) => {
           res.status(CREATED).send(user);

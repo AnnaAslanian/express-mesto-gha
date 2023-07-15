@@ -4,9 +4,6 @@ const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
-// const ERROR_BAD_REQ = 400;
-// const ERROR_CODE_NOT_FOUND = 404;
-// const ERROR_SERVER = 500;
 const CREATED = 201;
 
 const getCards = (req, res, next) => {

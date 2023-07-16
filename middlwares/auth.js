@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
-// eslint-disable-next-line consistent-return
 const auth = (req, res, next) => {
   const jwtToken = req.cookies.token;
   let payload;
   try {
     payload = jwt.verify(jwtToken, 'very-secret-key');
   } catch (err) {
-    return UnauthorizedError(res);
+    next(new UnauthorizedError('Вы не авторизированы'));
+    return;
   }
   req.user = payload;
   next();

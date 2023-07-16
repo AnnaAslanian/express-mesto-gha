@@ -44,10 +44,7 @@ const createUser = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    throw new UnauthorizedError('Введены неправильные данные для входа');
-  }
-  User.findOne({ email })
+  return User.findOne({ email })
     .select('+password')
     .orFail(() => next(new UnauthorizedError('Введены неправильные данные для входа')))
     .then((user) => {
@@ -89,7 +86,7 @@ const getUserInfo = (req, res, next) => {
       res.send(user);
     })
     .catch((error) => {
-      if (error.name === 'CastError') {
+      if (error.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next(error);

@@ -86,7 +86,7 @@ const getUserInfo = (req, res, next) => {
       res.send(user);
     })
     .catch((error) => {
-      if (error.name === 'ValidationError') {
+      if (error.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next(error);

@@ -32,23 +32,58 @@ const getCards = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена');
-      } else if (card.owner.toString() !== req.user._id) {
-        throw new ForbiddenError('У вас недостаточно прав для удаление этой карточки');
+  const { cardId } = req.params;
+  Card.findById(cardId)
+    // eslint-disable-next-line consistent-return
+    .then((cardResult) => {
+      if (cardResult) {
+        const ownerId = cardResult.owner._id.toString();
+        const userId = req.user._id;
+        if (ownerId === userId) {
+          Card.findByIdAndRemove(cardId)
+            .then((card) => {
+              if (card) {
+                res.send(card);
+              }
+            })
+            .catch((err) => next(err));
+        } else {
+          return next(
+            new ForbiddenError('У вас недостаточно прав для удаление этой карточки'),
+          );
+        }
+      } else {
+        return next(new NotFoundError('Карточка с указанным _id не найдена'));
       }
-      res.send(card);
     })
     .catch((error) => {
       if (error.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при удалении карточки'));
-      } else {
-        next(error);
+        return next(
+          new BadRequestError('Переданы некорректные данные при удалении карточки'),
+        );
       }
+      return next(error);
     });
 };
+
+// const deleteCard = (req, res, next) => {
+//   Card.findByIdAndRemove(req.params.cardId)
+//     .then((card) => {
+//       if (!card) {
+//         throw new NotFoundError('Карточка с указанным _id не найдена');
+//       } else if (card.owner.toString() !== req.user._id) {
+//         throw new ForbiddenError('У вас недостаточно прав для удаление этой карточки');
+//       }
+//       res.send(card);
+//     })
+//     .catch((error) => {
+//       if (error.name === 'CastError') {
+//         next(new BadRequestError('Переданы некорректные данные при удалении карточки'));
+//       } else {
+//         next(error);
+//       }
+//     });
+// };
 
 const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(

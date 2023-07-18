@@ -131,8 +131,9 @@ const updateUser = (req, res, next) => {
 };
 
 const updateAvatar = (req, res, next) => {
+  const userId = req.user._id;
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+  User.findByIdAndUpdate(userId, { avatar }, { new: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь с указанным _id не найден');
@@ -142,9 +143,11 @@ const updateAvatar = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении аватара'));
-      } else {
-        next(error);
       }
+      if (error.name === 'CastError') {
+        return next(new BadRequestError('Переданные не корректные данные id.'));
+      }
+      return next(error);
     });
 };
 
